@@ -160,7 +160,7 @@ The convergence data (Figs. 3 and 4) and the Eq. (16) check are reproduced exact
 For Fig. 4, L = 64 gives identical output files; the L = 1024 E-RLBM `tau_nh = 0.75` value was obtained on a
 cluster with the earlier code.
 
-## License
+## License GPL-3.0
 
 <!-- choose a license, e.g. MIT or GPL-3.0 -->
 
