@@ -82,8 +82,9 @@ The scripts take `THREADS` (OpenMP threads, 0 = all) and, where relevant, `N` (m
 - The map covers 400 × 400 points:
   - `U0 = 0.05 cs + (i + 1)(cs - 0.05 cs)/400`, which gives 0.05 < Ma ≤ 1;
   - `log10 nu = -5 + 3 j/400`.
-- A run is unstable if the total kinetic energy exceeds twice its initial value at a check. Checks are
-  made every 100 steps during 100 T.
+- A run is unstable if the kinetic energy `E = (1/2) sum_x |u(x)|^2` exceeds twice its initial value at a check.
+  Checks are made every 100 steps during 100 T. (The programs in `src/` also count a non-finite energy as
+  unstable.)
 - Classification of the maps:
   - **Blue:** RLBM and E-RLBM (`tau_nh = 0.65`) both stable.
   - **Red:** only the E-RLBM stable.
@@ -101,8 +102,8 @@ The scripts take `THREADS` (OpenMP threads, 0 = all) and, where relevant, `N` (m
   - halfway bounce-back on the block;
   - periodic in y.
 - The map covers `tau_nh = 0.5 + 0.6 i/400` and `log10 nu = -5 + 4.3 j/400`.
-- A run lasts `200 ny/U0` steps. It is unstable if, at any step, the density of any node exceeds ten times the
-  initial value or is not finite.
+- A run lasts `200 ny/U0` steps. It is unstable if, at any step, the magnitude of the density at any node exceeds
+  ten times the initial value (`|rho| > 10 rho0`) or the density is not finite.
 
 ### Fig. 3 — Taylor–Green convergence
 
@@ -145,10 +146,14 @@ functions. The programs in `src/` reproduce them except for points near the stab
 - **Test:** a 20 × 20 subsample of each map.
 - **Result:** 2 differing points out of 400 for the E-RLBM map and 5 out of 400 for the RLBM map. All of them
   are in mixed regions of the original map.
-- **Why points differ:** near the boundary, an instability grows so slowly that it reaches the threshold close
-  to the end of the 100 T horizon, and whether it does depends on rounding (compiler and flags).
-- **NaN check:** the earlier code did not test for non-finite energy. No run of the earlier code became non-finite
-  at the 695 stable points surrounded by unstable ones.
+- **Why points differ:** close to the stability boundary the classification of individual points depends on
+  rounding (compiler and flags). In the scattered corner at Ma <= 0.13 and log10 nu <= -4.4, for example, the
+  instabilities are slow: among the points tested there (see below), the largest E/E0 is 2.7, and the energy
+  first exceeds 2 E0 at a median of about 90% of the 100 T horizon.
+- **NaN check:** the earlier code did not test for non-finite energy. All 695 points of the two maps that were
+  classified as stable but have at least three unstable neighbours were rerun with the earlier code, checking
+  the energy at every step. None became non-finite. 454 of them exceed 2 E0 at one of the checks made every
+  100 steps, so the recompiled code classifies them as unstable; 463 exceed it at some step.
 
 The Fig. 2 map in `data/` was computed on a cluster with the earlier code, after two corrections: its instability
 test now also counts a non-finite density as unstable, and a race condition in its OpenMP loop was removed. The
