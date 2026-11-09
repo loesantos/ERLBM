@@ -2,8 +2,8 @@
 
 Source code for the simulations of
 
-> L. O. E. dos Santos, D. N. Siebert, R. L. M. Bazarin,
-> *Extended-regularized lattice Boltzmann method*, submitted to *Computers & Fluids* (2026).
+> L. O. E. dos Santos, D. N. Siebert,
+> *Extended-regularized lattice Boltzmann method*, (https://arxiv.org/abs/2610.31072).
 
 Every program is built on **SimBoltz**, a C++ library of lattice Boltzmann functions. A snapshot of the
 library files used here is included in `SimBoltz_Functions/`.
